@@ -58,6 +58,40 @@ Only one field can be filled by the user; the others become **inactive (SCREEN-A
 Depending on which field is filled, different data is displayed: for example, if only "Sipariş Numarası (Order Number)" is provided, corresponding order details are shown.  
 All data is defined directly within the program (no database access).
 
+### `task8_flight_alv_with_occupancy`  
+Builds a **REUSE ALV** report that filters by airline(s) via **SELECT-OPTIONS** on `SFLIGHT-CARRID`.  
+Calculates **seat occupancy %** from `SEATSMAX/SEATSOCC` and shows it as a new column.  
+- Rows with **> 90% occupancy** are highlighted **red** (using `LINE_COLOR`).  
+- Adds a custom toolbar button **“Uçak Detayı (Aircraft Detail)”** via `PF-STATUS` & `USER_COMMAND`.  
+When the user selects a row and clicks the button, displays the flight’s **`PLANETYPE`** in a popup.  
+
+### `task9_for_all_entries_salv_orders`  
+Demonstrates efficient data fetching: first **headers**, then **details** only for those headers.  
+- Takes **customer numbers** with **SELECT-OPTIONS** on `KNA1-KUNNR`.  
+- Selects matching **sales orders** from `VBAK` into an internal table.  
+- If any found, fetches corresponding **items** from `VBAP` using **`FOR ALL ENTRIES`**.  
+- Merges header & item data and shows it in an **SALV** report (fallback to REUSE ALV if needed).  
+
+### `task10_custom_container_alv_mara`  
+Creates **Screen 100** with a **Custom Container** and embeds an **OO ALV Grid** (`CL_GUI_ALV_GRID`) in **PBO**.  
+- Reads material data from **`MARA`**.  
+- Builds field catalog manually with **`LVC_S_FCAT`** (order, headers, widths).  
+- Sets layout via **`LVC_S_LAYO`**: title **“Malzeme Listesi (Material List)”** and **Zebra** pattern on.  
+
+### `task11_splitter_master_detail_alv`  
+Implements a **master–detail** UI using a **Splitter Container**: top ALV = **orders**, bottom ALV = **items**.  
+- At start, top ALV lists `VBAK` (Order No., Customer No., Date…).  
+- Bottom ALV is empty initially.  
+- On **double-click** of a row in the top ALV, loads that order’s **`VBAP`** items and fills the bottom ALV.  
+
+### `task12_editable_alv_with_save`  
+Turns an **OO ALV** into a simple **editable** data maintenance screen for a custom **Z-table**.  
+- Z-table fields: `MATNR`, `MAKTX`, `UNAME1`. Seed with sample data.  
+- In ALV, **‘Malzeme Açıklaması (MAKTX)’** is **editable** (`EDIT = 'X'` in field catalog).  
+- Adds a custom toolbar button **“Değişiklikleri Kaydet (Save Changes)”**.  
+- On cell edits + Enter, handle **`data_changed`** event to **track changed rows** (no DB write yet).  
+- On Save button, **update only changed rows** in the Z-table; set **`UNAME1 = sy-uname`**; show success message.  
+
 ---
 
 ## Notes
