@@ -1,8 +1,0 @@
-MODULE user_command_0100 INPUT.
-  CASE sy-ucomm.
-    WHEN 'BACK'.
-      SET SCREEN 0.
-    WHEN 'GORUNTULE'.
-      PERFORM ALV_GOSTERME.
-  ENDCASE.
-ENDMODULE.
