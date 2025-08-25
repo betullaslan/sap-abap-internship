@@ -1,0 +1,15 @@
+MODULE status_0100 OUTPUT.
+  SET PF-STATUS '0100'.
+  SET TITLEBAR  '0100'.
+
+  PERFORM build_alv.
+ENDMODULE.
+
+MODULE user_command_0100 INPUT.
+  CASE sy-ucomm.
+    WHEN 'BACK'.
+      IF go_grid IS BOUND. go_grid->free( ). ENDIF.
+      IF go_con  IS BOUND. go_con->free( ).  ENDIF.
+      LEAVE PROGRAM.
+  ENDCASE.
+ENDMODULE.
