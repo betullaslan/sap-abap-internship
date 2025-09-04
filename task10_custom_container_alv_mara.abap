@@ -1,0 +1,98 @@
+TYPE-POOLS: lvc.
+
+DATA: go_con   TYPE REF TO cl_gui_custom_container,
+      go_grid  TYPE REF TO cl_gui_alv_grid.
+
+TYPES: BEGIN OF ty_mara,
+         matnr TYPE mara-matnr,
+         mtart TYPE mara-mtart,
+         matkl TYPE mara-matkl,
+         meins TYPE mara-meins,
+         ersda TYPE mara-ersda,
+         laeda TYPE mara-laeda,
+       END OF ty_mara.
+
+DATA: gt_mara TYPE STANDARD TABLE OF ty_mara WITH DEFAULT KEY.
+
+DATA: gt_fcat TYPE lvc_t_fcat,
+      gs_fcat TYPE lvc_s_fcat,
+      gs_layo TYPE lvc_s_layo.
+
+*********************************************************************
+
+START-OF-SELECTION.
+  CALL SCREEN 100.
+
+MODULE status_0100 OUTPUT.
+  SET PF-STATUS '0100'.
+  SET TITLEBAR  '0100'.
+
+  PERFORM build_alv.
+ENDMODULE.
+
+MODULE user_command_0100 INPUT.
+  CASE sy-ucomm.
+    WHEN 'BACK'.
+      IF go_grid IS BOUND. go_grid->free( ). ENDIF.
+      IF go_con  IS BOUND. go_con->free( ).  ENDIF.
+      LEAVE PROGRAM.
+  ENDCASE.
+ENDMODULE.
+
+*********************************************************************
+
+FORM build_alv.
+  IF go_grid IS INITIAL.
+    CREATE OBJECT go_con
+      EXPORTING container_name = 'CC'.
+
+    CREATE OBJECT go_grid
+      EXPORTING i_parent = go_con.
+
+    SELECT matnr,mtart,matkl,meins,ersda,laeda
+    FROM mara INTO TABLE @gt_mara UP TO 200 ROWS.
+
+    CLEAR gt_fcat.
+
+    CLEAR gs_fcat.
+    gs_fcat-fieldname = 'MATNR'. gs_fcat-col_pos = 1.
+    gs_fcat-coltext   = 'Malzeme'. gs_fcat-outputlen = 18. gs_fcat-key = 'X'.
+    APPEND gs_fcat TO gt_fcat.
+
+    CLEAR gs_fcat.
+    gs_fcat-fieldname = 'MTART'. gs_fcat-col_pos = 2.
+    gs_fcat-coltext   = 'Tür'. gs_fcat-outputlen = 6.
+    APPEND gs_fcat TO gt_fcat.
+
+    CLEAR gs_fcat.
+    gs_fcat-fieldname = 'MATKL'. gs_fcat-col_pos = 3.
+    gs_fcat-coltext   = 'Malzeme Sınıfı'. gs_fcat-outputlen = 10.
+    APPEND gs_fcat TO gt_fcat.
+
+    CLEAR gs_fcat.
+    gs_fcat-fieldname = 'MEINS'. gs_fcat-col_pos = 4.
+    gs_fcat-coltext   = 'Ölçü Br.'. gs_fcat-outputlen = 5.
+    APPEND gs_fcat TO gt_fcat.
+
+    CLEAR gs_fcat.
+    gs_fcat-fieldname = 'ERSDA'. gs_fcat-col_pos = 5.
+    gs_fcat-coltext   = 'Oluşturma'. gs_fcat-outputlen = 10.
+    APPEND gs_fcat TO gt_fcat.
+
+    CLEAR gs_fcat.
+    gs_fcat-fieldname = 'LAEDA'. gs_fcat-col_pos = 6.
+    gs_fcat-coltext   = 'Son Değişiklik'. gs_fcat-outputlen = 10.
+    APPEND gs_fcat TO gt_fcat.
+
+    CLEAR gs_layo.
+    gs_layo-grid_title = 'Malzeme Listesi'.
+    gs_layo-zebra      = 'X'.
+
+    CALL METHOD go_grid->set_table_for_first_display
+      EXPORTING
+        is_layout       = gs_layo
+      CHANGING
+        it_outtab       = gt_mara
+        it_fieldcatalog = gt_fcat.
+  ENDIF.
+ENDFORM.
