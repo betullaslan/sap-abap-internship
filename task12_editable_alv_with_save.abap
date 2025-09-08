@@ -1,19 +1,19 @@
 INCLUDE <icon>.
 
-CONSTANTS c_tabname TYPE tabname VALUE 'ZBK_ODEV_011'.
+CONSTANTS c_tabname TYPE tabname VALUE 'ZBA_TASK_12'.
 
-TABLES: zbk_odev_011.
+TABLES: ZBA_TASK_12.
 
 TYPES: BEGIN OF ty_data,
-         malz_no    TYPE zbk_odev_011-malz_no,
-         malz_acik  TYPE zbk_odev_011-malz_acik,
-         kullanici  TYPE zbk_odev_011-kullanici,
+         malz_no    TYPE ZBA_TASK_12-malz_no,
+         malz_acik  TYPE ZBA_TASK_12-malz_acik,
+         kullanici  TYPE ZBA_TASK_12-kullanici,
        END OF ty_data.
 
 DATA: gt_data     TYPE STANDARD TABLE OF ty_data WITH DEFAULT KEY,
       gs_data     TYPE ty_data.
 
-TYPES: ty_malz_set TYPE HASHED TABLE OF zbk_odev_011-malz_no
+TYPES: ty_malz_set TYPE HASHED TABLE OF ZBA_TASK_12-malz_no
                     WITH UNIQUE KEY table_line.
 DATA: gt_changed_keys TYPE ty_malz_set.
 
