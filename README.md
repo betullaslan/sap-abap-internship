@@ -59,40 +59,68 @@ Depending on which field is filled, different data is displayed: for example, if
 All data is defined directly within the program (no database access).
 
 ### `task08_flight_alv_with_occupancy`  
-Builds a **REUSE ALV** report that filters by airline(s) via **SELECT-OPTIONS** on `SFLIGHT-CARRID`.  
-Calculates **seat occupancy %** from `SEATSMAX/SEATSOCC` and shows it as a new column.  
-- Rows with **> 90% occupancy** are highlighted **red** (using `LINE_COLOR`).  
-- Adds a custom toolbar button **“Uçak Detayı (Aircraft Detail)”** via `PF-STATUS` & `USER_COMMAND`.  
-When the user selects a row and clicks the button, displays the flight’s **`PLANETYPE`** in a popup.  
+Builds a **REUSE ALV** report that allows filtering flights by airline (`SFLIGHT-CARRID`) through a selection screen.  
+The program calculates the seat occupancy percentage from `SEATSMAX/SEATSOCC` and adds it as a new column in the ALV.  
+Flights with occupancy above 90% are automatically highlighted in red using `LINE_COLOR`.  
+A custom toolbar button “Uçak Detayı (Aircraft Detail)” is added via `PF-STATUS` and `USER_COMMAND`.  
+When the user selects a row and presses the button, the related aircraft type (`PLANETYPE`) is displayed in a popup window.  
 
 ### `task09_for_all_entries_salv_orders`  
-Demonstrates efficient data fetching: first **headers**, then **details** only for those headers.  
-- Takes **customer numbers** with **SELECT-OPTIONS** on `KNA1-KUNNR`.  
-- Selects matching **sales orders** from `VBAK` into an internal table.  
-- If any found, fetches corresponding **items** from `VBAP` using **`FOR ALL ENTRIES`**.  
-- Merges header & item data and shows it in an **SALV** report (fallback to REUSE ALV if needed).  
+Demonstrates efficient data fetching with a header–item relationship.  
+Customer numbers are provided via a selection screen (`KNA1-KUNNR`).  
+Matching sales orders are read from `VBAK`, and only if any exist, the corresponding items are fetched from `VBAP` using the **FOR ALL ENTRIES** technique.  
+The program then merges header and item data and displays the result in an **SALV report** (with fallback to REUSE ALV if necessary).  
 
 ### `task10_custom_container_alv_mara`  
-Creates **Screen 100** with a **Custom Container** and embeds an **OO ALV Grid** (`CL_GUI_ALV_GRID`) in **PBO**.  
-- Reads material data from **`MARA`**.  
-- Builds field catalog manually with **`LVC_S_FCAT`** (order, headers, widths).  
-- Sets layout via **`LVC_S_LAYO`**: title **“Malzeme Listesi (Material List)”** and **Zebra** pattern on.  
+Implements a screen-based OO ALV report inside a custom container.  
+Screen `0100` hosts a **CL_GUI_CUSTOM_CONTAINER** with an embedded **CL_GUI_ALV_GRID** created during PBO.  
+Material data is read from `MARA` and displayed in the ALV with a manually built field catalog (`LVC_S_FCAT`) defining column order, headers, and widths.  
+The layout (`LVC_S_LAYO`) is customized to include a report title “Malzeme Listesi (Material List)” and zebra striping for readability.  
 
 ### `task11_splitter_master_detail_alv`  
-Implements a **master–detail** UI using a **Splitter Container**: top ALV = **orders**, bottom ALV = **items**.  
-- At start, top ALV lists `VBAK` (Order No., Customer No., Date…).  
-- Bottom ALV is empty initially.  
-- On **double-click** of a row in the top ALV, loads that order’s **`VBAP`** items and fills the bottom ALV.  
+Creates a master–detail style UI using a **Splitter Container** with two ALV grids.  
+The top ALV initially lists sales orders from `VBAK` (order number, customer number, date, etc.), while the bottom ALV starts empty.  
+When the user double-clicks a row in the top ALV, the program reads the related items from `VBAP` and displays them in the bottom ALV.  
+This provides an interactive drill-down between order headers and their items within a single screen.  
 
 ### `task12_editable_alv_with_save`  
-Turns an **OO ALV** into a simple **editable** data maintenance screen for a custom **Z-table**.  
-- Z-table fields: `MATNR`, `MAKTX`, `UNAME1`. Seed with sample data.  
-- In ALV, **‘Malzeme Açıklaması (MAKTX)’** is **editable** (`EDIT = 'X'` in field catalog).  
-- Adds a custom toolbar button **“Değişiklikleri Kaydet (Save Changes)”**.  
-- On cell edits + Enter, handle **`data_changed`** event to **track changed rows** (no DB write yet).  
-- On Save button, **update only changed rows** in the Z-table; set **`UNAME1 = sy-uname`**; show success message.  
+Transforms an OO ALV into an editable data maintenance screen for a custom Z-table.  
+The Z-table contains fields `MATNR`, `MAKTX`, and `UNAME1`, seeded with example data.  
+In the ALV, the column “Malzeme Açıklaması (MAKTX)” is set as editable via the field catalog (`EDIT = 'X'`).  
+A toolbar button “Değişiklikleri Kaydet (Save Changes)” is added.  
+When users modify values and press Enter, the **`data_changed`** event is used to track edited rows.  
+On pressing Save, only the changed rows are updated back to the Z-table with `UNAME1` filled from `sy-uname`, and a success message is displayed.  
 
----
+### `task13_department_table_search_help`  
+Implementation of a Department maintenance table with integrated Search Help and ALV reporting.  
+A custom table is created (Department ID, Name, Manager, etc.) and maintained via `SM30`.  
+A Search Help is defined in SE11 to allow users to search by department ID or name.  
+In the ABAP program, the selection screen uses this Search Help, and selected data is displayed in an **ALV report** for better visualization.  
+
+### `task14_bapi_salesorder_create`  
+Creation of a Sales Order from ABAP using the standard BAPI `BAPI_SALESORDER_CREATEFROMDAT2`.  
+The program provides a selection screen where the user enters customer number, material number, and quantity.  
+These inputs are mapped into the required structures (`ORDER_HEADER_IN`, `ORDER_PARTNERS`, `ORDER_ITEMS_IN`) and passed to the BAPI.  
+The result is checked in the RETURN table: successful calls display the new sales order number, while errors return descriptive messages.  
+
+### `task15_custom_rfc_function_module`  
+Development of a custom Remote Function Call (RFC) function module for external access.  
+In SE37, a Z-function module is created under a function group and set as **Remote-Enabled**.  
+The module receives a material number as input and retrieves details such as description and type from the MARA table.  
+The information is returned through an export structure, enabling other SAP or external systems to call it via RFC.  
+
+### `task16_adobeform_salesorder`  
+Generating formatted PDF output for a sales order using Adobe Forms.  
+The program accepts a sales order number as input, reads header data from VBAK and item data from VBAP, and passes them to an Adobe Form interface.  
+Within `SFP`, interface parameters and context are defined, and the layout is designed with header fields and an item table.  
+The final output is a PDF document that visually presents the sales order information directly from SAP.  
+
+### `task17_ooalv_bapi_update_price`  
+An integrated scenario combining OO ALV, editable fields, and material price updates with a BAPI.  
+A report collects material information from MARA, MAKT, and MBEW tables and displays it in an **OO ALV Grid** (`CL_GUI_ALV_GRID`).  
+The ALV includes an editable column “New Price” and a custom toolbar button “Update Price”.  
+When triggered, the program processes the changed rows, calls `BAPI_MATERIAL_SAVEDATA` to update material prices, and provides immediate feedback in the ALV (green for success, red with error details).  
+This exercise simulates a realistic business case for interactive data maintenance in SAP.  
 
 ## Notes
 
