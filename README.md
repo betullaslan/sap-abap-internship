@@ -15,35 +15,52 @@ Also lists numbers divisible by 2, 3, and 5, and checks where a user-input value
 
 ### `task01_calculator_fm`  
 Implements a basic calculator using **Function Modules** in ABAP.  
-Supports arithmetic operations (add, subtract, multiply, divide) with modular structure and user input handling.
+- Supports arithmetic operations (add, subtract, multiply, divide)  
+- Uses modular structure and user input handling  
 
 ### `task01_calculator_perform`  
 A simple calculator program built using **FORM routines (`PERFORM`)** to organize arithmetic operations in a structured and reusable way.
 
 ### `task01_calculator_screen`  
 Presents a basic **interactive screen (dynpro)** for the calculator using `SE51`.  
-Includes input/output fields for numbers and operations, showcasing screen-based user interaction in ABAP.
+- Includes input/output fields for numbers and operations
+- Showcases screen-based user interaction in ABAP 
 
 ### `task02_alv_order_list`  
 Generates a structured **ALV (ABAP List Viewer)** report displaying a list of customer orders.  
-Demonstrates usage of ALV functions to sort, filter, and format tabular data dynamically.
+Demonstrates usage of ALV functions to:  
+- Sort  
+- Filter  
+- Format tabular data dynamically  
 
 ### `task03_material_alv_filter`  
 Defines a material structure containing material number, description, and price fields.  
-Initializes example data directly within the program and uses a **SELECT-OPTIONS** range to let the user specify a material number interval.  
-Filters the internal table based on the user's input and displays the result using **REUSE_ALV_GRID_DISPLAY**, complete with a custom field catalog and descriptive column headers.
+- Initializes example data directly within the program  
+- Uses **SELECT-OPTIONS** to let the user specify a material number interval  
+- Filters the internal table based on input  
+- Displays result using **REUSE_ALV_GRID_DISPLAY** with custom field catalog and headers  
 
 ### `task04_discount_screen`  
-Creates an interactive screen (`0100`) with input fields for order amount (Sipariş Tutarı), discount rate (İndirim Oranı), and customer type (Müşteri Tipi) as a dropdown: "Bireysel (Individual)" / "Kurumsal (Corporate)".  
-Includes a **"Hesapla (Calculate)"** button and an output field to display the final amount.  
-When the button is pressed, the program calculates the discounted total, and if the customer type is "Kurumsal (Corporate)", adds **1% KDV (VAT)** on top.  
-The final calculated value is shown in the output field on the screen.
+Creates an interactive screen (`0100`) with:  
+- Input fields for **Order Amount (Sipariş Tutarı)**, **Discount Rate (İndirim Oranı)**, and **Customer Type (Müşteri Tipi)**  
+- Dropdown for customer type: "Bireysel (Individual)" / "Kurumsal (Corporate)"  
+- A **"Hesapla (Calculate)"** button  
+- An output field for the final amount  
+
+Logic:  
+- Calculates the discounted total  
+- If customer type = Corporate → adds **1% KDV (VAT)**  
+- Displays final value in the output field  
 
 ### `task05_single_selection_display`  
-Creates a screen with three selectable options: "Sipariş Göster (Show Orders)", "Müşteri Göster (Show Customers)", and "Malzeme Göster (Show Materials)" using **radio buttons** (only one can be selected).  
-Includes a **"Listele (List)"** button that displays the corresponding data based on the user's selection.  
-Example data for each category is defined directly in the program.  
-Displays the selected data on the screen, optionally using ALV formatting for structured output.
+Creates a screen with three **radio buttons** (only one selectable):  
+- "Sipariş Göster (Show Orders)"  
+- "Müşteri Göster (Show Customers)"  
+- "Malzeme Göster (Show Materials)"  
+
+Includes a **"Listele (List)"** button to:  
+- Display corresponding data (example data defined directly in the program)  
+- Optionally use ALV formatting for structured output  
 
 ### `task06_alv_view_modes`  
 Implements a screen with two radio button options: "Detaylı Görünüm (Detailed View)" and "Özet Görünüm (Summary View)", along with a **"Görüntüle (Display)"** button.  
@@ -53,74 +70,115 @@ Displays an **ALV report** based on the selected view mode.
 All data is defined directly within the program without using any database tables.
 
 ### `task07_exclusive_input_logic`  
-Creates a program with a **selection screen block** that includes three fields: "Sipariş Numarası (Order Number)", "Müşteri Numarası (Customer Number)", and "Malzeme Numarası (Material Number)".  
-Only one field can be filled by the user; the others become **inactive (SCREEN-ACTIVE = 0)** automatically using `LOOP AT SCREEN` logic.  
-Depending on which field is filled, different data is displayed: for example, if only "Sipariş Numarası (Order Number)" is provided, corresponding order details are shown.  
-All data is defined directly within the program (no database access).
+Creates a selection screen block with three fields:  
+- **Sipariş Numarası (Order Number)**  
+- **Müşteri Numarası (Customer Number)**  
+- **Malzeme Numarası (Material Number)**  
+
+Logic:  
+- Only one field can be filled → others become inactive (`SCREEN-ACTIVE = 0`)  
+- Different data is displayed depending on which field is filled  
+- All data is program-defined (no DB access)  
 
 ### `task08_flight_alv_with_occupancy`  
-Builds a **REUSE ALV** report that allows filtering flights by airline (`SFLIGHT-CARRID`) through a selection screen.  
-The program calculates the seat occupancy percentage from `SEATSMAX/SEATSOCC` and adds it as a new column in the ALV.  
-Flights with occupancy above 90% are automatically highlighted in red using `LINE_COLOR`.  
-A custom toolbar button “Uçak Detayı (Aircraft Detail)” is added via `PF-STATUS` and `USER_COMMAND`.  
-When the user selects a row and presses the button, the related aircraft type (`PLANETYPE`) is displayed in a popup window.  
+Builds a **REUSE ALV** report with airline filtering (`SFLIGHT-CARRID`).  
+
+Features:  
+- Calculates seat occupancy (`SEATSOCC / SEATSMAX`) → adds new column  
+- Highlights occupancy >90% in **red** (`LINE_COLOR`)  
+- Adds toolbar button **“Uçak Detayı (Aircraft Detail)”**  
+- On row selection + button press → shows related `PLANETYPE` in a popup 
 
 ### `task09_for_all_entries_salv_orders`  
-Demonstrates efficient data fetching with a header–item relationship.  
-Customer numbers are provided via a selection screen (`KNA1-KUNNR`).  
-Matching sales orders are read from `VBAK`, and only if any exist, the corresponding items are fetched from `VBAP` using the **FOR ALL ENTRIES** technique.  
-The program then merges header and item data and displays the result in an **SALV report** (with fallback to REUSE ALV if necessary).  
+Demonstrates efficient data fetching with header–item relationship.  
+
+Steps:  
+- Customer numbers entered via selection screen (`KNA1-KUNNR`)  
+- Matching sales orders read from `VBAK`  
+- If any orders exist → items fetched from `VBAP` using **FOR ALL ENTRIES**  
+- Header & item data merged and displayed in **SALV report** (fallback: REUSE ALV)  
 
 ### `task10_custom_container_alv_mara`  
-Implements a screen-based OO ALV report inside a custom container.  
-Screen `0100` hosts a **CL_GUI_CUSTOM_CONTAINER** with an embedded **CL_GUI_ALV_GRID** created during PBO.  
-Material data is read from `MARA` and displayed in the ALV with a manually built field catalog (`LVC_S_FCAT`) defining column order, headers, and widths.  
-The layout (`LVC_S_LAYO`) is customized to include a report title “Malzeme Listesi (Material List)” and zebra striping for readability.  
+Implements a screen-based OO ALV inside a **Custom Container**.  
+
+- Screen `0100` hosts `CL_GUI_CUSTOM_CONTAINER` + embedded `CL_GUI_ALV_GRID`  
+- Reads material data from `MARA`  
+- Field catalog (`LVC_S_FCAT`) manually built (column order, headers, widths)  
+- Layout (`LVC_S_LAYO`) customized:  
+  - Report title “Malzeme Listesi (Material List)”  
+  - Zebra striping for readability  
 
 ### `task11_splitter_master_detail_alv`  
-Creates a master–detail style UI using a **Splitter Container** with two ALV grids.  
-The top ALV initially lists sales orders from `VBAK` (order number, customer number, date, etc.), while the bottom ALV starts empty.  
-When the user double-clicks a row in the top ALV, the program reads the related items from `VBAP` and displays them in the bottom ALV.  
-This provides an interactive drill-down between order headers and their items within a single screen.  
+Creates a **master–detail UI** using a Splitter Container with two ALV grids.  
+
+- **Top ALV**: lists sales orders from `VBAK` (order no, customer, date, etc.)  
+- **Bottom ALV**: starts empty  
+- On double-clicking a row in the top ALV → related items from `VBAP` are shown in the bottom ALV  
+
+This enables an interactive drill-down between order headers and items on one screen.  
 
 ### `task12_editable_alv_with_save`  
-Transforms an OO ALV into an editable data maintenance screen for a custom Z-table.  
-The Z-table contains fields `MATNR`, `MAKTX`, and `UNAME1`, seeded with example data.  
-In the ALV, the column “Malzeme Açıklaması (MAKTX)” is set as editable via the field catalog (`EDIT = 'X'`).  
-A toolbar button “Değişiklikleri Kaydet (Save Changes)” is added.  
-When users modify values and press Enter, the **`data_changed`** event is used to track edited rows.  
-On pressing Save, only the changed rows are updated back to the Z-table with `UNAME1` filled from `sy-uname`, and a success message is displayed.  
+Transforms an OO ALV into an **editable data maintenance screen** for a custom Z-table (`MATNR`, `MAKTX`, `UNAME1`).  
+
+- Example data seeded into the Z-table  
+- Column **“MAKTX”** set as editable (`EDIT = 'X'`)  
+- Toolbar button: **"Değişiklikleri Kaydet (Save Changes)"**  
+- **`data_changed`** event tracks modified rows  
+- On Save:  
+  - Only changed rows are updated in the Z-table  
+  - `UNAME1` automatically filled from `sy-uname`  
+  - Success message displayed  
 
 ### `task13_department_table_search_help`  
-Implementation of a Department maintenance table with integrated Search Help and ALV reporting.  
-A custom table is created (Department ID, Name, Manager, etc.) and maintained via `SM30`.  
-A Search Help is defined in SE11 to allow users to search by department ID or name.  
-In the ABAP program, the selection screen uses this Search Help, and selected data is displayed in an **ALV report** for better visualization.  
+Implements a **Department maintenance table** with integrated Search Help and ALV reporting.  
+
+- Custom table created (Department ID, Name, Manager, etc.) and maintained via `SM30`  
+- **Search Help** defined in SE11 to search by department ID or name  
+- Program selection screen uses this Search Help  
+- Selected data displayed in an **ALV report** for clearer visualization  
 
 ### `task14_bapi_salesorder_create`  
-Creation of a Sales Order from ABAP using the standard BAPI `BAPI_SALESORDER_CREATEFROMDAT2`.  
-The program provides a selection screen where the user enters customer number, material number, and quantity.  
-These inputs are mapped into the required structures (`ORDER_HEADER_IN`, `ORDER_PARTNERS`, `ORDER_ITEMS_IN`) and passed to the BAPI.  
-The result is checked in the RETURN table: successful calls display the new sales order number, while errors return descriptive messages.  
+Creates a Sales Order from ABAP using the standard BAPI `BAPI_SALESORDER_CREATEFROMDAT2`.  
+
+- Selection screen: user enters **customer number, material number, and quantity**  
+- Inputs mapped into structures: `ORDER_HEADER_IN`, `ORDER_PARTNERS`, `ORDER_ITEMS_IN`  
+- BAPI called with these inputs  
+- RETURN table checked:  
+  - On success → new sales order number displayed  
+  - On error → descriptive messages returned  
 
 ### `task15_custom_rfc_function_module`  
-Development of a custom Remote Function Call (RFC) function module for external access.  
-In SE37, a Z-function module is created under a function group and set as **Remote-Enabled**.  
-The module receives a material number as input and retrieves details such as description and type from the MARA table.  
-The information is returned through an export structure, enabling other SAP or external systems to call it via RFC.  
+Develops a custom **Remote Function Call (RFC) function module** for external access.  
+
+- Created in SE37 under a function group and set as **Remote-Enabled**  
+- Input: material number  
+- Retrieves details (description, type) from `MARA`  
+- Returns information via an export structure  
+- Can be called by other SAP or external systems through RFC  
 
 ### `task16_adobeform_salesorder`  
-Generating formatted PDF output for a sales order using Adobe Forms.  
-The program accepts a sales order number as input, reads header data from VBAK and item data from VBAP, and passes them to an Adobe Form interface.  
-Within `SFP`, interface parameters and context are defined, and the layout is designed with header fields and an item table.  
-The final output is a PDF document that visually presents the sales order information directly from SAP.  
+Generates a formatted **PDF sales order** using Adobe Forms.  
+
+- Input: sales order number  
+- Reads header data from `VBAK` and item data from `VBAP`  
+- Passes data to an Adobe Form interface (`SFP`)  
+- In `SFP`: interface parameters, context, and layout (header fields + item table) are defined  
+- Output: PDF document that presents sales order information directly from SAP  
 
 ### `task17_ooalv_bapi_update_price`  
-An integrated scenario combining OO ALV, editable fields, and material price updates with a BAPI.  
-A report collects material information from MARA, MAKT, and MBEW tables and displays it in an **OO ALV Grid** (`CL_GUI_ALV_GRID`).  
-The ALV includes an editable column “New Price” and a custom toolbar button “Update Price”.  
-When triggered, the program processes the changed rows, calls `BAPI_MATERIAL_SAVEDATA` to update material prices, and provides immediate feedback in the ALV (green for success, red with error details).  
-This exercise simulates a realistic business case for interactive data maintenance in SAP.  
+An integrated scenario combining OO ALV, editable fields, and BAPI-based price updates.  
+
+- Report collects material data from `MARA`, `MAKT`, and `MBEW`  
+- Displays results in an **OO ALV Grid** (`CL_GUI_ALV_GRID`)  
+- ALV features:  
+  - Editable column **“New Price”**  
+  - Toolbar button **“Update Price”**  
+- On trigger:  
+  - Processes changed rows  
+  - Calls `BAPI_MATERIAL_SAVEDATA` to update material prices  
+  - Provides immediate feedback in ALV → green = success, red = error with details  
+
+This simulates a realistic business case for interactive data maintenance in SAP.  
 
 ## Notes
 
